@@ -12,7 +12,7 @@ import org.checkerframework.checker.units.qual.A;
 
 @Autonomous(name="BlueTruss2", group="Robot")
 
-public class BlueAuto extends LinearOpMode {
+public class BlueTruss2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor         fr   = null;
