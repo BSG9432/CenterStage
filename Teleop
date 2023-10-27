@@ -1,0 +1,116 @@
+package org.firstinspires.ftc.teamcode.TeleOp;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp(name = "Teleop")
+public class Teleop extends OpMode {
+
+    DcMotor fL;
+    DcMotor bL;
+    DcMotor fR;
+    DcMotor bR;
+    DcMotor Arm;
+    DcMotor Lift;
+    Servo LeftServo;
+    Servo RightServo;
+
+
+
+    @Override
+    public void init() {
+        fL = hardwareMap.dcMotor.get("fL");
+        bL = hardwareMap.dcMotor.get("bL");
+        fR = hardwareMap.dcMotor.get("fR");
+        bR = hardwareMap.dcMotor.get("bR");
+        Arm = hardwareMap.dcMotor.get("Arm");
+        LeftServo = hardwareMap.servo.get("LS");
+        RightServo = hardwareMap.servo.get("RS");
+        Lift = hardwareMap.dcMotor.get("Lift");
+
+        fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+    }
+
+    @Override
+    public void loop() {
+        //Front back Left
+        if (Math.abs(gamepad1.left_stick_y) > .2) {
+            fL.setPower(gamepad1.left_stick_y * 1);
+            bL.setPower(gamepad1.left_stick_y * 1);
+        } else {
+            fL.setPower(0);
+            bL.setPower(0);
+        }
+
+        //Front back Right
+        if (Math.abs(-gamepad1.right_stick_y) > .2) {
+            fR.setPower(-gamepad1.right_stick_y * 1);
+            bR.setPower(-gamepad1.right_stick_y * 1);
+        } else {
+            fR.setPower(0);
+            bR.setPower(0);
+        }
+
+        //Side speed Right
+        if (gamepad1.right_bumper) {
+            fL.setPower(-.9);
+            bL.setPower(.9);
+            fR.setPower(-.9);
+            bR.setPower(.9);
+        }
+        else {
+            fL.setPower(0);
+            bL.setPower(0);
+            fR.setPower(0);
+            bR.setPower(0);
+        }
+        //Side speed Left
+        if (gamepad1.left_bumper) {
+            fL.setPower(.9);
+            bL.setPower(-.9);
+            fR.setPower(.9);
+            bR.setPower(-.9);
+        }
+        else {
+            fL.setPower(0);
+            bL.setPower(0);
+            fR.setPower(0);
+            bR.setPower(0);
+        }
+        //funny arm
+        if (Math.abs(-gamepad2.left_stick_y) > .1) {
+            Arm.setPower(gamepad2.left_stick_y * .5);
+        }
+        else {
+            Arm.setPower(0);
+        }
+        //Intake out
+        if (gamepad2.b) {
+            LeftServo.setPosition(0.75);
+            RightServo.setPosition(0.75);
+        }
+        //Intake in
+        else if (gamepad2.a) {
+            LeftServo.setPosition(1);
+            RightServo.setPosition(0.5);
+        }
+        //Hook
+        if (Math.abs(-gamepad2.right_stick_y) > .1) {
+            Lift.setPower(gamepad2.right_stick_y * .9);
+        }
+        else {
+            Lift.setPower(0);
+        }
+
+    }
+}
