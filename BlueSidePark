@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.A;
 
-@Autonomous(name="RedTruss1", group="Robot")
+@Autonomous(name="BlueSidePark", group="Robot")
 
-public class RedTruss1 extends LinearOpMode {
+public class BlueSidePark extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor         fr   = null;
