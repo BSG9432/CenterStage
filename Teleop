@@ -15,6 +15,7 @@ public class Teleop extends OpMode {
     DcMotor bR;
     DcMotor Arm;
     DcMotor Lift;
+    DcMotor Wrist;
     Servo LeftServo;
     Servo RightServo;
 
@@ -30,6 +31,7 @@ public class Teleop extends OpMode {
         LeftServo = hardwareMap.servo.get("LS");
         RightServo = hardwareMap.servo.get("RS");
         Lift = hardwareMap.dcMotor.get("Lift");
+        Wrist = hardwareMap.dcMotor.get("Wrist");
 
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -37,7 +39,7 @@ public class Teleop extends OpMode {
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        Wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
@@ -87,6 +89,7 @@ public class Teleop extends OpMode {
             fR.setPower(0);
             bR.setPower(0);
         }
+
         //funny arm
         if (Math.abs(-gamepad2.left_stick_y) > .1) {
             Arm.setPower(gamepad2.left_stick_y * .5);
@@ -104,9 +107,20 @@ public class Teleop extends OpMode {
             LeftServo.setPosition(1);
             RightServo.setPosition(0.5);
         }
-        //Hook
+        //Wrist
         if (Math.abs(-gamepad2.right_stick_y) > .1) {
-            Lift.setPower(gamepad2.right_stick_y * .9);
+            Wrist.setPower(-gamepad2.right_stick_y * .9);
+        }
+        else {
+            Wrist.setPower(0);
+        }
+
+        //Lift
+        if (gamepad2.left_bumper) {
+            Lift.setPower(-.9);
+        }
+        else if (gamepad2.right_bumper) {
+            Lift.setPower(.9);
         }
         else {
             Lift.setPower(0);
