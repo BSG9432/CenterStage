@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 @Autonomous (name = "BlueRightScan", group = "Barcode")
-public class BlueTest extends LinearOpMode {
+public class BlueSight extends LinearOpMode {
 
         private ElapsedTime runtime = new ElapsedTime();
 
@@ -45,7 +45,7 @@ public class BlueTest extends LinearOpMode {
 
     OpenCvCamera webcam;
 
-    BlueSight pipeline = new BlueSight(telemetry);
+    BlueSightPipeline pipeline = new BlueSightPipeline(telemetry);
 
     @Override
     public void runOpMode() {
@@ -56,6 +56,22 @@ public class BlueTest extends LinearOpMode {
         bl = hardwareMap.dcMotor.get("bL");
         br = hardwareMap.dcMotor.get("bR");
         Lift = hardwareMap.dcMotor.get("Lift");
+        
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //FOR THE WEBCAM
         /*
