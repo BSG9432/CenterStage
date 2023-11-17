@@ -10,7 +10,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 //@Disabled
-public class BlueSightPipeline extends OpenCvPipeline {
+public class RedSightPipeline extends OpenCvPipeline {
     /*
      * An enum to define the skystone position
      */
@@ -85,7 +85,7 @@ public class BlueSightPipeline extends OpenCvPipeline {
 
     private Telemetry telemetry;
 
-    public BlueSightPipeline(Telemetry telemetry) {
+    public RedSightPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 
