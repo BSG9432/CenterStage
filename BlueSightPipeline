@@ -85,7 +85,7 @@ public class BlueSightPipeline extends OpenCvPipeline {
 
     private Telemetry telemetry;
 
-    public sightTest(Telemetry telemetry) {
+    public BlueSightPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 
