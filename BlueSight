@@ -45,7 +45,7 @@ public class BlueTest extends LinearOpMode {
 
     OpenCvCamera webcam;
 
-    sightTest pipeline = new sightTest(telemetry);
+    BlueSight pipeline = new BlueSight(telemetry);
 
     @Override
     public void runOpMode() {
