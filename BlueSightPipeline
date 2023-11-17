@@ -10,7 +10,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 //@Disabled
-public class sightTest extends OpenCvPipeline {
+public class BlueSightPipeline extends OpenCvPipeline {
     /*
      * An enum to define the skystone position
      */
