@@ -56,7 +56,7 @@ public class BlueSight extends LinearOpMode {
         bl = hardwareMap.dcMotor.get("bL");
         br = hardwareMap.dcMotor.get("bR");
         Lift = hardwareMap.dcMotor.get("Lift");
-        
+
         fr.setDirection(DcMotor.Direction.FORWARD);
         fl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
@@ -149,7 +149,7 @@ public class BlueSight extends LinearOpMode {
                     encoderLeftStrafe(0.8,5,5,5.0);
                     break;
                 case CENTER:
-                    encoderDrive(0.5,10,10,5.0);
+                    encoderDrive(0.5,30,30,5.0);
                     break;
                 case RIGHT:
                     encoderRightStrafe(0.8,5,5,5.0);
@@ -240,10 +240,10 @@ public class BlueSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
@@ -306,10 +306,10 @@ public class BlueSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
