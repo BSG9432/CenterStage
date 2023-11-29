@@ -147,12 +147,21 @@ public class BlueSight extends LinearOpMode {
             switch (pipeline.getAnalysis()) {
                 case LEFT:
                     encoderLeftStrafe(0.8,5,5,5.0);
+                    encoderDrive(0.8,-5,5,5.0);
+                    encoderDrive(0.8,5,5,5.0);
+                    leftClaw.setPosition(0.80);
+                    sleep(1000);
                     break;
                 case CENTER:
-                    encoderDrive(0.5,30,30,5.0);
+                    encoderDrive(0.5,20,20,5.0);
+                    leftClaw.setPosition(0.80);
+                    sleep(1000);
                     break;
                 case RIGHT:
                     encoderRightStrafe(0.8,5,5,5.0);
+                    encoderDrive(0.8,20,20,5.0);
+                    leftClaw.setPosition(0.80);
+                    sleep(1000);
                     break;
             }
 
