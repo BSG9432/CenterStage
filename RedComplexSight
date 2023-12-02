@@ -153,21 +153,46 @@ public class RedComplexSight extends LinearOpMode {
 
             switch (pipeline.getAnalysis()) {
                 case LEFT:
-                    encoderLeftStrafe(0.8,5,5,5.0);
-                    encoderDrive(0.8,10,10,5.0);
-                    leftClaw.setPosition(0.8);
+                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderDrive(0.8,-5,5,5.0); //Move 5 inches Counter Clockwise
+                    encoderDrive(0.8,5,5,5.0); //Move 5 inches Forward
+                    leftClaw.setPosition(0.80); //Open Left claw
+                    sleep(1000);
+                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
+                    encoderDrive(0.8,-10,10,5.0); //Move 10 inches Counter Clockwise
+                    encoderDrive(0.8,20,20,5.0); //Move 20 inches Forward
+                    encoderArm(0.5,5,5.0); //Move arm 5 inches Up
+                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
+                    rightClaw.setPosition(0.75); //Open Right Claw
                     sleep(1000);
                     break;
                 case CENTER:
-                    encoderDrive(0.5,30,30,5.0);
-                    leftClaw.setPosition(0.8);
+                    encoderDrive(0.5,15,15,5.0); //Move 15 inches Forward
+                    leftClaw.setPosition(0.80); //Open Left Claw
+                    sleep(1000);
+                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
+                    encoderDrive(0.8,-5,5,5.0); //Move 5 inches Counter clockwise
+                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderArm(0.5,5,5.0); //Move arm 5 Inches Up
+                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
+                    rightClaw.setPosition(0.75); //Open Right Claw
                     sleep(1000);
                     break;
                 case RIGHT:
-                    encoderRightStrafe(0.8,10,10,5.0);
-                    encoderDrive(0.8,5,-5,5.0);
-                    encoderDrive(0.8,5,5,5.0);
-                    leftClaw.setPosition(0.8);
+                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderDrive(0.8,5,-5,5.0); //Spin 5 inches Clockwise
+                    encoderDrive(0.8,5,5,5.0); //Move 5 inches Forward
+                    leftClaw.setPosition(0.80); //open Left claw
+                    sleep(1000);
+                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
+                    encoderDrive(0.8,5,-5,5.0); //Move 5 inches Clockwise
+                    encoderLeftStrafe(0.8,10,10,5.0); //Move 10 inches Left
+                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderRightStrafe(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderArm(0.8,5,5.0); //Move arm 5 inches Up
+                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
+                    rightClaw.setPosition(0.75); // Close Right claw
                     sleep(1000);
                     break;
             }
