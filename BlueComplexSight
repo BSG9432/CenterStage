@@ -16,7 +16,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
-@Autonomous (name = "BlueRightScan", group = "Barcode")
+@Autonomous (name = "BlueLeftScan", group = "Barcode")
 public class BlueComplexSight extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -62,7 +62,7 @@ public class BlueComplexSight extends LinearOpMode {
         Lift = hardwareMap.dcMotor.get("Lift");
         leftClaw = hardwareMap.servo.get("LS");
         rightClaw = hardwareMap.servo.get("RS");
-        arm = hardwareMap.dcMotor.get("arm");
+        arm = hardwareMap.dcMotor.get("Arm");
 
 
         fr.setDirection(DcMotor.Direction.FORWARD);
@@ -163,10 +163,9 @@ public class BlueComplexSight extends LinearOpMode {
                     leftClaw.setPosition(0.80); //open Left claw
                     sleep(1000);
                     encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderDrive(0.8,5,-5,5.0); //Move 5 inches Clockwise
                     encoderLeftStrafe(0.8,10,10,5.0); //Move 10 inches Left
                     encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderRightStrafe(0.8,10,10,5.0); //Move 10 inches Forward
+                    encoderRightStrafe(0.8,10,10,5.0); //Move 10 inches Right
                     encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
                     encoderArm(0.8,5,5.0); //Move arm 5 inches Up
                     encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
@@ -178,7 +177,7 @@ public class BlueComplexSight extends LinearOpMode {
                     leftClaw.setPosition(0.80); //Open Left Claw
                     sleep(1000);
                     encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderDrive(0.8,-5,5,5.0); //Move 5 inches Counter clockwise
+                    encoderDrive(0.8,5,-5,5.0); //Move 5 inches Clockwise
                     encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
                     encoderArm(0.5,5,5.0); //Move arm 5 Inches Up
                     encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
@@ -412,7 +411,7 @@ public class BlueComplexSight extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newArmTarget = arm.getCurrentPosition() + (int)(ArmInches * COUNTS_PER_INCH);
+            newArmTarget = arm.getCurrentPosition() - (int)(ArmInches * COUNTS_PER_INCH);
 
             arm.setTargetPosition(newArmTarget);
 
