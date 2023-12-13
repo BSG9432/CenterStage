@@ -99,13 +99,13 @@ public class Teleop extends OpMode {
         }
         //Y Intake out
         if (gamepad2.b) {
-            LeftServo.setPosition(0.80); //.72 old values
-            RightServo.setPosition(0.75); //.80
+            LeftServo.setPosition(0.70); //.70 old values
+            RightServo.setPosition(0.65); //.70
         }
         //Y Intake in
         else if (gamepad2.a) {
-            LeftServo.setPosition(.72); //.58
-            RightServo.setPosition(0.84); //.95
+            LeftServo.setPosition(.56); //.36
+            RightServo.setPosition(0.80); //.97
         }
         //Wrist
         if (Math.abs(-gamepad2.right_stick_y) > .1) {
@@ -127,21 +127,21 @@ public class Teleop extends OpMode {
         }
         //left intake out
         if (gamepad2.dpad_left) {
-            LeftServo.setPosition(0.80);
+            LeftServo.setPosition(0.70);
         }
         //Right intake out
         else if (gamepad2.dpad_right) {
-            RightServo.setPosition(0.75);
+            RightServo.setPosition(0.70);
         }
         //Single Intake Out
         if (gamepad2.y) {
-            LeftServo.setPosition(0.72); //.80 old values
-            RightServo.setPosition(0.80); //.75
+            LeftServo.setPosition(0.70); //.80 old values
+            RightServo.setPosition(0.70); //.75
         }
         //Single Intake in
         else if (gamepad2.x) {
-            LeftServo.setPosition(.58); //.72
-            RightServo.setPosition(0.95); //.84
+            LeftServo.setPosition(.36); //.72
+            RightServo.setPosition(.97); //.84
         }
     }
 }
