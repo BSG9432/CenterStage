@@ -18,6 +18,7 @@ public class Teleop extends OpMode {
     DcMotor Wrist;
     Servo LeftServo;
     Servo RightServo;
+    CRServo DroneLift;
 
 
 
@@ -32,6 +33,7 @@ public class Teleop extends OpMode {
         RightServo = hardwareMap.servo.get("RS");
         Lift = hardwareMap.dcMotor.get("Lift");
         Wrist = hardwareMap.dcMotor.get("Wrist");
+        DroneLift = hardwareMap.crservo.get("droneLift");
 
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -90,7 +92,7 @@ public class Teleop extends OpMode {
             bR.setPower(0);
         }
 
-        //funny arm
+        //funny arm :P
         if (Math.abs(-gamepad2.left_stick_y) > .1) {
             Arm.setPower(gamepad2.left_stick_y * .5);
         }
@@ -142,6 +144,18 @@ public class Teleop extends OpMode {
         else if (gamepad2.x) {
             LeftServo.setPosition(.36); //.72
             RightServo.setPosition(.97); //.84
+        }
+        //Lift up
+        if (Math.abs(gamepad1.left_trigger) > .2) {
+            DroneLift.setPower(gamepad1.left_trigger * 0.8);
+        } else {
+            DroneLift.setPower(0);
+        }
+        //Lift Down
+        if (Math.abs(gamepad1.right_trigger) > .2) {
+            DroneLift.setPower(gamepad1.right_trigger * -0.8);
+        } else {
+            DroneLift.setPower(0);
         }
     }
 }
