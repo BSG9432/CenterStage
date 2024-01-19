@@ -16,10 +16,10 @@ public class Teleop extends OpMode {
     DcMotor Arm;
     DcMotor Lift;
     DcMotor Wrist;
-    Servo LeftServo;
-    Servo RightServo;
+    CRServo LeftServo;
+    CRServo RightServo;
+    Servo DroneServo;
     CRServo DroneLift;
-
 
 
     @Override
@@ -29,11 +29,12 @@ public class Teleop extends OpMode {
         fR = hardwareMap.dcMotor.get("fR");
         bR = hardwareMap.dcMotor.get("bR");
         Arm = hardwareMap.dcMotor.get("Arm");
-        LeftServo = hardwareMap.servo.get("LS");
-        RightServo = hardwareMap.servo.get("RS");
+        LeftServo = hardwareMap.crservo.get("LS");
+        RightServo = hardwareMap.crservo.get("RS");
         Lift = hardwareMap.dcMotor.get("Lift");
         Wrist = hardwareMap.dcMotor.get("Wrist");
         DroneLift = hardwareMap.crservo.get("droneLift");
+        DroneServo = hardwareMap.servo.get("Drone");
 
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -99,15 +100,18 @@ public class Teleop extends OpMode {
         else {
             Arm.setPower(0);
         }
-        //Y Intake out
-        if (gamepad2.b) {
-            LeftServo.setPosition(0.70); //.70 old values
-            RightServo.setPosition(0.65); //.70
+        // Intake out
+        if (Math.abs(gamepad2.left_trigger) > .1) {
+            LeftServo.setPower(gamepad2.left_trigger * .5);
+            RightServo.setPower(gamepad2.left_trigger * .5);
         }
-        //Y Intake in
-        else if (gamepad2.a) {
-            LeftServo.setPosition(.56); //.36
-            RightServo.setPosition(0.80); //.97
+        // Intake in
+        else if (Math.abs(gamepad2.right_trigger) > .1) {
+            LeftServo.setPower(-gamepad2.right_trigger * .5);
+            RightServo.setPower(-gamepad2.right_trigger * .5);
+        } else {
+            LeftServo.setPower(0);
+            RightServo.setPower(0);
         }
         //Wrist
         if (Math.abs(-gamepad2.right_stick_y) > .1) {
@@ -116,7 +120,6 @@ public class Teleop extends OpMode {
         else {
             Wrist.setPower(0);
         }
-
         //Lift
         if (gamepad2.left_bumper) {
             Lift.setPower(-.9);
@@ -126,24 +129,6 @@ public class Teleop extends OpMode {
         }
         else {
             Lift.setPower(0);
-        }
-        //left intake out
-        if (gamepad2.dpad_left) {
-            LeftServo.setPosition(0.70);
-        }
-        //Right intake out
-        else if (gamepad2.dpad_right) {
-            RightServo.setPosition(0.70);
-        }
-        //Single Intake Out
-        if (gamepad2.y) {
-            LeftServo.setPosition(0.70); //.80 old values
-            RightServo.setPosition(0.70); //.75
-        }
-        //Single Intake in
-        else if (gamepad2.x) {
-            LeftServo.setPosition(.36); //.72
-            RightServo.setPosition(.97); //.84
         }
         //Lift up
         if (Math.abs(gamepad1.left_trigger) > .2) {
@@ -157,5 +142,14 @@ public class Teleop extends OpMode {
         } else {
             DroneLift.setPower(0);
         }
+        //DoneLaunch
+        if (gamepad1.a) {
+            DroneServo.setPosition(0.50);
+        }
+        //Drone dock
+        if (gamepad1.b) {
+            DroneServo.setPosition(0.80);
+        }
+
     }
 }
