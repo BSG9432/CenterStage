@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Teleop")
@@ -104,16 +105,19 @@ public class Teleop extends OpMode {
 
         // Intake out
         if (gamepad2.b) {
-            LeftServo.setPosition(1); //Neutral = 1
-            RightServo.setPosition(0); //Neutral = 0
+            LeftServo.setPosition(0); //Neutral = 1
+            RightServo.setPosition(1); //Neutral = 0
 
         }
         // Intake in
-        else if (gamepad2.a) {
-            LeftServo.setPosition(0);
-            RightServo.setPosition(0);
+        else if (gamepad2.x) {
+            LeftServo.setPosition(.5);
+
+        } else if (gamepad2.y) {
+        RightServo.setPosition(.5);
 
         }
+
 
         //Wrist
         if (Math.abs(-gamepad2.right_stick_y) > .1) {
