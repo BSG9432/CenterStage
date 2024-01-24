@@ -16,8 +16,8 @@ public class Teleop extends OpMode {
     DcMotor Arm;
     DcMotor Lift;
     DcMotor Wrist;
-    CRServo LeftServo;
-    CRServo RightServo;
+    Servo LeftServo;
+    Servo RightServo;
     Servo DroneServo;
     CRServo DroneLift;
 
@@ -29,8 +29,8 @@ public class Teleop extends OpMode {
         fR = hardwareMap.dcMotor.get("fR");
         bR = hardwareMap.dcMotor.get("bR");
         Arm = hardwareMap.dcMotor.get("Arm");
-        LeftServo = hardwareMap.crservo.get("LS");
-        RightServo = hardwareMap.crservo.get("RS");
+        LeftServo = hardwareMap.servo.get("LS");
+        RightServo = hardwareMap.servo.get("RS");
         Lift = hardwareMap.dcMotor.get("Lift");
         Wrist = hardwareMap.dcMotor.get("Wrist");
         DroneLift = hardwareMap.crservo.get("droneLift");
@@ -48,6 +48,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+
         //Front back Left
         if (Math.abs(gamepad1.left_stick_y) > .2) {
             fL.setPower(gamepad1.left_stick_y * 1);
@@ -100,19 +101,20 @@ public class Teleop extends OpMode {
         else {
             Arm.setPower(0);
         }
+
         // Intake out
-        if (Math.abs(gamepad2.left_trigger) > .1) {
-            LeftServo.setPower(gamepad2.left_trigger * .5);
-            RightServo.setPower(gamepad2.left_trigger * .5);
+        if (gamepad2.b) {
+            LeftServo.setPosition(1); //Neutral = 1
+            RightServo.setPosition(0); //Neutral = 0
+
         }
         // Intake in
-        else if (Math.abs(gamepad2.right_trigger) > .1) {
-            LeftServo.setPower(-gamepad2.right_trigger * .5);
-            RightServo.setPower(-gamepad2.right_trigger * .5);
-        } else {
-            LeftServo.setPower(0);
-            RightServo.setPower(0);
+        else if (gamepad2.a) {
+            LeftServo.setPosition(0);
+            RightServo.setPosition(0);
+
         }
+
         //Wrist
         if (Math.abs(-gamepad2.right_stick_y) > .1) {
             Wrist.setPower(-gamepad2.right_stick_y * .9);
