@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,13 +7,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Auto.DDLC;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
-@Autonomous (name = "RedRightScan", group = "Barcode")
+@Autonomous (name = "RedLeftScan", group = "Barcode")
 public class RedSight extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -42,10 +41,11 @@ public class RedSight extends LinearOpMode {
     Servo leftClaw;
     Servo rightClaw;
     DcMotor Lift;
+    DcMotor arm;
 
     OpenCvCamera webcam;
 
-    RedSightPipeline pipeline = new RedSightPipeline(telemetry);
+    BlueSightPipeline pipeline = new BlueSightPipeline(telemetry);
 
     @Override
     public void runOpMode() {
@@ -56,22 +56,29 @@ public class RedSight extends LinearOpMode {
         bl = hardwareMap.dcMotor.get("bL");
         br = hardwareMap.dcMotor.get("bR");
         Lift = hardwareMap.dcMotor.get("Lift");
+        leftClaw = hardwareMap.servo.get("LS");
+        rightClaw = hardwareMap.servo.get("RS");
+        arm = hardwareMap.dcMotor.get("Arm");
+
 
         fr.setDirection(DcMotor.Direction.FORWARD);
         fl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
         bl.setDirection(DcMotor.Direction.REVERSE);
+        arm.setDirection(DcMotor.Direction.FORWARD);
 
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //FOR THE WEBCAM
         /*
@@ -135,7 +142,10 @@ public class RedSight extends LinearOpMode {
 
         //Wait for the user to press start on the Driver Station
 
-        waitForStart();
+        while (!isStarted() && !isStopRequested()){
+            leftClaw.setPosition(0.1);
+            rightClaw.setPosition(0.92);
+        }
 
         //Manages Telemetry and stopping the stream
         while (opModeIsActive()) {
@@ -144,25 +154,32 @@ public class RedSight extends LinearOpMode {
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.update();
 
+            //put on spike mark then go park
             switch (pipeline.getAnalysis()) {
                 case LEFT:
-                    encoderDrive(0.8,2,2,5.0);
-                    encoderLeftStrafe(0.8,5,5,5.0);
-                    encoderDrive(0.8,10,10,5.0);
-                    leftClaw.setPosition(0.8);
+                    encoderDrive(0.5,-11,-11,5.0); //Move 11 inches backwards
+                    encoderDrive(0.5,8,-8,5.0); //Turn clockwise 90
+                    encoderDrive(0.3,1.5,1.5,5.0); //Move 1 inch Forward
+                    leftClaw.setPosition(0.2); //Open Left claw
+                    sleep(1000);
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backward
                     sleep(1000);
                     break;
                 case CENTER:
-                    encoderDrive(0.5,10,10,5.0);
-                    leftClaw.setPosition(0.8);
+                    encoderDrive(0.5,-16,-16,5.0); //Move 16 inches Backwards
+                    leftClaw.setPosition(0.2); //Open Left Claw
+                    sleep(1000);
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backwards
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backwards
                     sleep(1000);
                     break;
                 case RIGHT:
-                    encoderDrive(0.8,10,10,5.0);
-                    encoderDrive(0.8,5,-5,5.0);
-                    encoderDrive(0.8,5,5,5.0);
-                    leftClaw.setPosition(0.8);
+                    encoderDrive(0.5,-11,-11,5.0); //Move 11 inches backwards
+                    encoderDrive(0.5,-8,8,5.0); //Turn counterclockwise 90
+                    encoderDrive(0.3,1.5,1.5,5.0); //Move 1 inch Forward
+                    leftClaw.setPosition(0.2); //Open Left claw
                     sleep(1000);
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backward
                     break;
             }
 
@@ -250,10 +267,10 @@ public class RedSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
@@ -316,10 +333,10 @@ public class RedSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
@@ -366,6 +383,52 @@ public class RedSight extends LinearOpMode {
             fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            sleep(250);   // optional pause after each move.
+        }
+    }
+    public void encoderArm(double speed, double ArmInches, double timeoutS) {
+        int newArmTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newArmTarget = arm.getCurrentPosition() - (int)(ArmInches * COUNTS_PER_INCH);
+
+            arm.setTargetPosition(newArmTarget);
+
+            // Turn On RUN_TO_POSITION
+            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            arm.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (arm.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Running to",  " %7d ", newArmTarget);
+                telemetry.addData("Currently at",  " at %7d", newArmTarget,
+                        arm.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            arm.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
