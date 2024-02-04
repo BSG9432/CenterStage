@@ -1,23 +1,18 @@
-package org.firstinspires.ftc.teamcode.Vision;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Auto.DDLC;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-
-@Autonomous (name = "BlueLeftScan", group = "Barcode")
-public class BlueComplexSight extends LinearOpMode {
+@Autonomous (name = "BlueRightScan", group = "Barcode")
+public class BlueSight extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -146,7 +141,10 @@ public class BlueComplexSight extends LinearOpMode {
 
         //Wait for the user to press start on the Driver Station
 
-        waitForStart();
+        while (!isStarted() && !isStopRequested()){
+            leftClaw.setPosition(0.1);
+            rightClaw.setPosition(0.92);
+        }
 
         //Manages Telemetry and stopping the stream
         while (opModeIsActive()) {
@@ -155,47 +153,35 @@ public class BlueComplexSight extends LinearOpMode {
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.update();
 
+            //put on spike mark then go park
             switch (pipeline.getAnalysis()) {
                 case LEFT:
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderDrive(0.8,-5,5,5.0); //Spin 5 inches Counter clockwise
-                    encoderDrive(0.8,5,5,5.0); //Move 5 inches Forward
-                    leftClaw.setPosition(0.80); //open Left claw
+                    encoderDrive(0.5,-11,-11,5.0); //Move 11 inches backwards
+                    encoderDrive(0.5,8,-8,5.0); //Turn clockwise 90
+                    encoderDrive(0.3,1.5,1.5,5.0); //Move 1 inch Forward
+                    leftClaw.setPosition(0.2); //Open Left claw
                     sleep(1000);
-                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderLeftStrafe(0.8,10,10,5.0); //Move 10 inches Left
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderRightStrafe(0.8,10,10,5.0); //Move 10 inches Right
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderArm(0.8,5,5.0); //Move arm 5 inches Up
-                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
-                    rightClaw.setPosition(0.75); // Close Right claw
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backward
                     sleep(1000);
                     break;
                 case CENTER:
-                    encoderDrive(0.5,15,15,5.0); //Move 15 inches Forward
-                    leftClaw.setPosition(0.80); //Open Left Claw
+                    encoderDrive(0.5,-16,-16,5.0); //Move 16 inches backwards
+                    leftClaw.setPosition(0.2); //Open Left Claw
                     sleep(1000);
-                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderDrive(0.8,5,-5,5.0); //Move 5 inches Clockwise
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderArm(0.5,5,5.0); //Move arm 5 Inches Up
-                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
-                    rightClaw.setPosition(0.75); //Open Right Claw
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backward
                     sleep(1000);
                     break;
                 case RIGHT:
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderDrive(0.8,5,-5,5.0); //Move 5 inches Clockwise
-                    encoderDrive(0.8,5,5,5.0); //Move 5 inches Forward
-                    leftClaw.setPosition(0.80); //Open Left claw
+                    encoderDrive(0.5,-11,-11,5.0); //Move 11 inches backwards
+                    encoderDrive(0.5,-8,8,5.0); //Turn counterclockwise 90
+                    encoderDrive(0.3,1.5,1.5,5.0); //Move 1 inch Forward
+                    leftClaw.setPosition(0.2); //Open Left claw
                     sleep(1000);
-                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderDrive(0.8,10,-10,5.0); //Move 10 inches Clockwise
-                    encoderDrive(0.8,20,20,5.0); //Move 20 inches Forward
-                    encoderArm(0.5,5,5.0); //Move arm 5 inches Up
-                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
-                    rightClaw.setPosition(0.75); //Open Right Claw
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches Backward
+
+                   /* encoderDrive(0.5,-1,-1,5.0); //Move 1 inch Backward
+                    encoderLeftStrafe(0.5,6,6,5.0); //Strafe 6 inches Left
+                    encoderDrive(0.5,-28,-28,5.0); //Move 25 inches Backward*/
                     sleep(1000);
                     break;
             }
@@ -284,10 +270,10 @@ public class BlueComplexSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
@@ -350,10 +336,10 @@ public class BlueComplexSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
