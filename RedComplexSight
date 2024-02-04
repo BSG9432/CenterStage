@@ -1,21 +1,27 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode.vision;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Auto.DDLC;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
-@Autonomous (name = "RedLeftScan", group = "Barcode")
+@Autonomous (name = "RedRightScan", group = "Barcode")
 public class RedComplexSight extends LinearOpMode {
+
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -142,7 +148,10 @@ public class RedComplexSight extends LinearOpMode {
 
         //Wait for the user to press start on the Driver Station
 
-        waitForStart();
+        while (!isStarted() && !isStopRequested()){
+            leftClaw.setPosition(0.1);
+            rightClaw.setPosition(0.92);
+        }
 
         //Manages Telemetry and stopping the stream
         while (opModeIsActive()) {
@@ -151,47 +160,56 @@ public class RedComplexSight extends LinearOpMode {
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.update();
 
+            // purple: right
+            // yellow: left
             switch (pipeline.getAnalysis()) {
                 case LEFT:
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderDrive(0.8,-5,5,5.0); //Move 5 inches Counter Clockwise
-                    encoderDrive(0.8,5,5,5.0); //Move 5 inches Forward
-                    leftClaw.setPosition(0.80); //Open Left claw
+                    encoderDrive(0.5,-11,-11,5.0); //Move 11 inches backwards
+                    encoderDrive(0.5,8,-8,5.0); //Turn clockwise 90
+                    encoderDrive(0.3,1.5,1.5,5.0); //Move 1 inches Forward
+                    rightClaw.setPosition(0.8); //Open Right Claw
                     sleep(1000);
-                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderDrive(0.8,-10,10,5.0); //Move 10 inches Counter Clockwise
-                    encoderDrive(0.8,20,20,5.0); //Move 20 inches Forward
-                    encoderArm(0.5,5,5.0); //Move arm 5 inches Up
-                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
-                    rightClaw.setPosition(0.75); //Open Right Claw
+                    encoderDrive(0.5,-15.5,-15.5,5.0); //Move 16 inches Back
+                    encoderDrive(0.5,17.3,-17.3,5.0); //Turn Clockwise 180
+                    encoderArm(0.2,9,5.0); //Move arm 9 inches Up
+                    encoderDrive(0.8,2,2,5.0); //Move 2 inches Forward
+                    leftClaw.setPosition(0.2); //Open Left claw
+                    sleep(1000);
+                    encoderDrive(0.3,-1,-1,5.0); //Move 1 inch Backward
                     sleep(1000);
                     break;
                 case CENTER:
-                    encoderDrive(0.5,15,15,5.0); //Move 15 inches Forward
-                    leftClaw.setPosition(0.80); //Open Left Claw
+                    encoderDrive(0.5,-18,-18,5.0); //Move 17 inches backwards
+                    encoderDrive(0.3,1.5,1.5,5.0); //Move 1 inches forward
+                    rightClaw.setPosition(0.8); //Open Right Claw
                     sleep(1000);
-                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderDrive(0.8,5,-5,5.0); //Move 5 inches clockwise
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderArm(0.5,5,5.0); //Move arm 5 Inches Up
-                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
-                    rightClaw.setPosition(0.75); //Open Right Claw
+                    encoderDrive(0.5,-2,-2,5.0); //Move 2 inches back
+                    encoderLeftStrafe(0.4,16.5,16.5,5.0); //Strafe 16 inches Right
+                    encoderDrive(0.5,9,9,5.0); //Move 9 inches Forward
+                    encoderDrive(0.5,-9,9,5.0); //Turn 90 counterclockwise
+                    encoderArm(0.2 ,9,5.0); //Move arm 9 inches Up
+                    encoderDrive(0.5,3,3,5.0); //Move 2 inches Forward
+                    leftClaw.setPosition(0.2); //Open Left claw
+                    sleep(1000);
+                    encoderDrive(0.3,-1,-1,5.0); //Move 1 inch Backward
                     sleep(1000);
                     break;
                 case RIGHT:
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderDrive(0.8,5,-5,5.0); //Spin 5 inches Clockwise
-                    encoderDrive(0.8,5,5,5.0); //Move 5 inches Forward
-                    leftClaw.setPosition(0.80); //open Left claw
+                    encoderDrive(0.5,-1,-1,5.0); //Move 1 inch Backwards
+                    encoderLeftStrafe(0.5,5.5,5.5,5.0); //Strafe 5.5 inches Right
+                    encoderDrive(0.3,-16,-16,5.0); //Move 16 inches backwards
+                    encoderDrive(0.3,2,2,5.0); //Move 2 inches Forward
+                    rightClaw.setPosition(0.8); //Open Right Claw
                     sleep(1000);
-                    encoderDrive(0.8,-5,-5,5.0); //Move 5 inches Back
-                    encoderRightStrafe(0.8,10,10,5.0); //Move 10 inches Right
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderLeftStrafe(0.8,10,10,5.0); //Move 10 inches Left
-                    encoderDrive(0.8,10,10,5.0); //Move 10 inches Forward
-                    encoderArm(0.8,5,5.0); //Move arm 5 inches Up
-                    encoderDrive(0.8,3,3,5.0); //Move 3 inches Forward
-                    rightClaw.setPosition(0.75); // Open Right claw
+                    encoderDrive(0.5,-2,-2,5.0);//Move 2 inch Back
+                    encoderLeftStrafe(0.5,11,11,5.0); //Strafe 11 inches Left
+                    encoderDrive(0.5,9,9,5.0); //Move 10 inches Forward
+                    encoderDrive(0.5,-9,9,5.0); //Turn counterclockwise 90
+                    encoderArm(0.3,9,5.0); //Move arm 9 inches Up
+                    encoderDrive(0.8,2,2,5.0);
+                    leftClaw.setPosition(0.2); //Open Left claw
+                    sleep(1000);
+                    encoderDrive(0.2,-1,-1,5.0); //Move 1 inch Backward
                     sleep(1000);
                     break;
             }
@@ -280,10 +298,10 @@ public class RedComplexSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
@@ -346,10 +364,10 @@ public class RedComplexSight extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = fr.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = bl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             fl.setTargetPosition(newflTarget);
             fr.setTargetPosition(newfrTarget);
             bl.setTargetPosition(newblTarget);
@@ -418,7 +436,6 @@ public class RedComplexSight extends LinearOpMode {
             runtime.reset();
             arm.setPower(Math.abs(speed));
 
-
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -442,8 +459,6 @@ public class RedComplexSight extends LinearOpMode {
 
             // Turn off RUN_TO_POSITION
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            sleep(250);   // optional pause after each move.
         }
     }
 }
